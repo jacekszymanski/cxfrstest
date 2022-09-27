@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf"
+           xmlns:ext="http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+      http://aries.apache.org/blueprint/xmlns/blueprint-ext/v1.0.0 http://aries.apache.org/schemas/blueprint-ext/blueprint-ext.xsd
+      http://camel.apache.org/schema/blueprint https://camel.apache.org/schema/blueprint/camel-blueprint.xsd
+      http://camel.apache.org/schema/blueprint/cxf https://camel.apache.org/schema/blueprint/cxf/camel-cxf.xsd">
+
+  <cxf:rsServer id="abcService" address="/abc" serviceClass="test.cxfrestkaraf.App" loggingFeatureEnabled="true">
+    <cxf:properties>
+      <entry key="bindingStyle" value="SimpleConsumer"/>
+    </cxf:properties>
+
+    <cxf:providers>
+      <bean id="jacksonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+    </cxf:providers>
+  </cxf:rsServer>
+
+  <camelContext id="abc.in"
+                messageHistory="true"
+                xmlns="http://camel.apache.org/schema/blueprint"
+  >
+
+    <route id="abcservice.in">
+      <from uri="cxfrs:bean:abcService" />
+
+      <throwException exceptionType="java.lang.Exception" message="test" />
+    </route>
+
+  </camelContext>
+</blueprint>
